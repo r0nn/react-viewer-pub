@@ -355,6 +355,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            _this.props.onResize();
 	        };
 	        _this.handleCanvasMouseDown = function (e) {
+	            if (e.button !== 0) {
+	                return;
+	            }
 	            _this.props.onCanvasMouseDown(e);
 	            _this.handleMouseDown(e);
 	        };
