@@ -545,6 +545,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            _this.props.onClose();
 	        };
 	        _this.loadImgSuccess = function (activeImage, imgWidth, imgHeight, isNewImage) {
+	            var isAltImage = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
+
 	            var realImgWidth = imgWidth;
 	            var realImgHeight = imgHeight;
 	            if (_this.props.defaultSize) {
@@ -579,7 +581,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                loading: false,
 	                rotate: 0,
 	                scaleX: scaleX,
-	                scaleY: scaleY
+	                scaleY: scaleY,
+	                isAltImage: isAltImage
 	            });
 	        };
 	        _this.handleChangeImg = function (newIndex) {
@@ -808,6 +811,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            var activeImg = {
 	                src: '',
+	                altSrc: '',
 	                alt: '',
 	                downloadUrl: ''
 	            };
@@ -862,7 +866,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            scaleX: _this.props.defaultScale,
 	            scaleY: _this.props.defaultScale,
 	            loading: false,
-	            loadFailed: false
+	            loadFailed: false,
+	            isAltImage: false
 	        };
 	        _this.setContainerWidthHeight();
 	        _this.footerHeight = constants.FOOTER_HEIGHT;
@@ -951,38 +956,49 @@ return /******/ (function(modules) { // webpackBootstrap
 	            activeImage = images[activeIndex];
 	        }
 	        var loadComplete = false;
+	        var isAltImage = false;
 	        var img = new Image();
 	        this.setState({
 	            activeIndex: activeIndex,
 	            loading: true,
-	            loadFailed: false
+	            loadFailed: false,
+	            isAltImage: false
 	        }, function () {
 	            img.onload = function () {
 	                if (!loadComplete) {
-	                    _this3.loadImgSuccess(activeImage, img.width, img.height, isNewImage);
+	                    _this3.loadImgSuccess(activeImage, img.width, img.height, isNewImage, isAltImage);
 	                }
 	            };
 	            img.onerror = function () {
+	                if (!!activeImage.altSrc && !isAltImage) {
+	                    isAltImage = true;
+	                    img.src = activeImage.altSrc;
+	                    if (img.complete) {
+	                        loadComplete = true;
+	                        _this3.loadImgSuccess(activeImage, img.width, img.height, isNewImage, isAltImage);
+	                    }
+	                }
 	                if (_this3.props.defaultImg) {
 	                    _this3.setState({
 	                        loadFailed: true
 	                    });
 	                    var deafultImgWidth = _this3.props.defaultImg.width || _this3.containerWidth * .5;
 	                    var defaultImgHeight = _this3.props.defaultImg.height || _this3.containerHeight * .5;
-	                    _this3.loadImgSuccess(activeImage, deafultImgWidth, defaultImgHeight, isNewImage);
+	                    _this3.loadImgSuccess(activeImage, deafultImgWidth, defaultImgHeight, isNewImage, isAltImage);
 	                } else {
 	                    _this3.setState({
 	                        activeIndex: activeIndex,
 	                        imageWidth: 0,
 	                        imageHeight: 0,
-	                        loading: false
+	                        loading: false,
+	                        isAltImage: isAltImage
 	                    });
 	                }
 	            };
 	            img.src = activeImage.src;
 	            if (img.complete) {
 	                loadComplete = true;
-	                _this3.loadImgSuccess(activeImage, img.width, img.height, isNewImage);
+	                _this3.loadImgSuccess(activeImage, img.width, img.height, isNewImage, isAltImage);
 	            }
 	        });
 	    };
@@ -1041,6 +1057,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    ViewerCore.prototype.render = function render() {
 	        var activeImg = {
 	            src: '',
+	            altSrc: '',
 	            alt: ''
 	        };
 	        var zIndex = 1000;

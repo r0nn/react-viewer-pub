@@ -18,6 +18,7 @@ export interface ViewerCoreState {
     scaleY?: number;
     loading?: boolean;
     loadFailed?: boolean;
+    isAltImage?: boolean;
 }
 export default class ViewerCore extends React.Component<ViewerProps, ViewerCoreState> {
     static defaultProps: Partial<ViewerProps>;
@@ -32,7 +33,7 @@ export default class ViewerCore extends React.Component<ViewerProps, ViewerCoreS
     startVisible(activeIndex: number): void;
     componentDidMount(): void;
     getImgWidthHeight(imgWidth: any, imgHeight: any): number[];
-    loadImgSuccess: (activeImage: ImageDecorator, imgWidth: any, imgHeight: any, isNewImage: boolean) => void;
+    loadImgSuccess: (activeImage: ImageDecorator, imgWidth: any, imgHeight: any, isNewImage: boolean, isAltImage?: boolean) => void;
     loadImg(activeIndex: any, isNewImage?: boolean): void;
     handleChangeImg: (newIndex: number) => void;
     handleChangeImgState: (width: any, height: any, top: any, left: any) => void;
