@@ -977,6 +977,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        loadComplete = true;
 	                        _this3.loadImgSuccess(activeImage, img.width, img.height, isNewImage, isAltImage);
 	                    }
+	                    return;
 	                }
 	                if (_this3.props.defaultImg) {
 	                    _this3.setState({
